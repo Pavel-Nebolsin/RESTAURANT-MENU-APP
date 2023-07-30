@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: main_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - my_network
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    entrypoint: sh -c "alembic upgrade head
+      && uvicorn main:app --host 0.0.0.0 --port 8000"
+
+  db:
+    container_name: postgres_db
+    image: postgres:15.1-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    networks:
+      - my_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready","-U","${POSTGRES_USER}","-d","${POSTGRES_DB}"]
+
+  tests:
+    # Сервис для запуска тестов
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    depends_on:
+      - api
+      - db
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    name: my_network
