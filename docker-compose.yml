@@ -32,6 +32,7 @@ services:
 
   tests:
     # Сервис для запуска тестов
+    container_name: crud_tests
     build:
       context: .
       dockerfile: Dockerfile.tests
