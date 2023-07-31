@@ -11,29 +11,30 @@ from models.models import Menu, SubMenu, Dish
 
 # Функция для получения всех подменю для конкретного меню
 def get_submenus_for_menu(target_menu_id: uuid.UUID, session) -> List[schemas.AllSubmenu]:
-    # Подсчёт кол-ва блюд для каждого подменю
-    submenus_with_counts = (
-        session.query(SubMenu, func.count(Dish.id).label('dishes_count'))
-        .outerjoin(Dish, SubMenu.id == Dish.submenu_id)
-        .filter(SubMenu.menu_id == target_menu_id)
-        .group_by(SubMenu)
-        .all()
-    )
+    # Запрос для получения всех подменю конкретного меню
+    submenus = session.query(SubMenu).filter(SubMenu.menu_id == target_menu_id).all()
 
-    # Создание экземпляров схемы AllSubmenu и заполнение полей
+    # Создание списка для хранения результатов
     submenu_responses = []
-    for submenu, dishes_count in submenus_with_counts:
+
+    for submenu in submenus:
+        # Запрос для подсчета количества блюд для данного подменю
+        dishes_count = session.query(func.count(Dish.id)).filter(Dish.submenu_id == submenu.id).scalar()
+
+        # Создание экземпляра схемы AllSubmenu и заполнение полей
         submenu_response = schemas.AllSubmenu(
             id=submenu.id,
             title=submenu.title,
-            description=submenu.description,  # Добавляем поле description
+            description=submenu.description,
             menu_id=submenu.menu_id,
             dishes_count=dishes_count
         )
-        # Добавление их список подменю для вывода
+
+        # Добавление подменю в список результатов
         submenu_responses.append(submenu_response)
 
     return submenu_responses
+
 
 
 def create_submenu(target_menu_id: uuid.UUID, submenu: schemas.SubMenuBase, session) -> SubMenu:
@@ -51,7 +52,8 @@ def create_submenu(target_menu_id: uuid.UUID, submenu: schemas.SubMenuBase, sess
 
 # Получаем подменю и подсчитываем количество блюд для данного подменю
 def get_submenu(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, session) -> schemas.AllSubmenu:
-    submenu = session.query(SubMenu).filter(SubMenu.id == target_submenu_id, SubMenu.menu_id == target_menu_id).first()
+    submenu = session.query(SubMenu).filter(SubMenu.id == target_submenu_id,
+                                            SubMenu.menu_id == target_menu_id).first()
     if not submenu:
         raise HTTPException(status_code=404, detail='submenu not found')
 
@@ -96,4 +98,5 @@ def delete_submenu(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, sess
     session.delete(submenu)
     session.commit()
 
-    return JSONResponse(status_code=200, content={'message': f'Submenu {submenu.title} deleted successfully'})
+    return JSONResponse(status_code=200,
+                        content={'message': f'Submenu {submenu.title} deleted successfully'})
