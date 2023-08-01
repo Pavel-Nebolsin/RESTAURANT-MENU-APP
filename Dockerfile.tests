@@ -6,3 +6,6 @@ RUN pip install pytest requests
 COPY tests/ /app/tests/
 
 WORKDIR /app/tests/
+
+# Запускает эту команду чтобы контейнер оставался активным
+CMD ["sleep", "infinity"]
