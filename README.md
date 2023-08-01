@@ -3,6 +3,6 @@
 `docker-compose up -d`<br>
 
 Когда все контейнеры запустятся, можно запустить контейнер с тестами командой:<br>
-`docker-compose run --rm tests pytest -s -v /app/tests/tests.py`<br>
+`docker exec crud_tests pytest --color=yes -s -v /app/tests/tests.py`<br>
 
 (предварительно должен бы установлен <a href="https://www.docker.com/">Docker<a>)
