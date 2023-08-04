@@ -2,10 +2,9 @@ import uuid
 from typing import List
 
 from fastapi import HTTPException
-from sqlalchemy import func, distinct
 from starlette.responses import JSONResponse
 
-import schemas
+from models import schemas
 from models.models import Menu, SubMenu, Dish
 
 

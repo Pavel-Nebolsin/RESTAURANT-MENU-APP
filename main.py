@@ -4,7 +4,7 @@ from fastapi import FastAPI, status, Body, Depends
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 from typing import List
-import schemas
+from models import schemas
 from db import create_session
 
 app = FastAPI(title='Y_LAB MENU API')
@@ -85,7 +85,7 @@ def get_all_dishes_handler(target_submenu_id: uuid.UUID, session: Session = Depe
 
 # Создаёт блюдо
 @app.post('/api/v1/menus/{target_menu_id}/submenus/{target_submenu_id}/dishes',
-             response_model=schemas.DishOut, status_code=status.HTTP_201_CREATED)
+          response_model=schemas.DishOut, status_code=status.HTTP_201_CREATED)
 def create_dish_handler(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
                         dish_data: schemas.DishBase, session: Session = Depends(create_session)):
     return dish_crud.create_dish(target_menu_id, target_submenu_id, dish_data, session)
@@ -93,7 +93,7 @@ def create_dish_handler(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
 
 # Возвращает блюдо
 @app.get('/api/v1/menus/{target_menu_id}/submenus/{target_submenu_id}/dishes/{target_dish_id}',
-            response_model=schemas.DishOut)
+         response_model=schemas.DishOut)
 def get_dish_handler(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, target_dish_id: uuid.UUID,
                      session: Session = Depends(create_session)):
     return dish_crud.get_dish(target_menu_id, target_submenu_id, target_dish_id, session)
@@ -101,7 +101,7 @@ def get_dish_handler(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, ta
 
 # Обновляет блюдо
 @app.patch('/api/v1/menus/{target_menu_id}/submenus/{target_submenu_id}/dishes/{target_dish_id}',
-              response_model=schemas.DishOut)
+           response_model=schemas.DishOut)
 def update_dish_handler(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, target_dish_id: uuid.UUID,
                         dish_data: schemas.DishBase = Body(...), session: Session = Depends(create_session)):
     return dish_crud.update_dish(target_menu_id, target_submenu_id, target_dish_id, dish_data, session)
@@ -109,7 +109,7 @@ def update_dish_handler(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
 
 # Удаляет блюдо
 @app.delete('/api/v1/menus/{target_menu_id}/submenus/{target_submenu_id}/dishes/{target_dish_id}',
-               response_model=schemas.DishOut)
+            response_model=schemas.DishOut)
 def delete_dish_handler(target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, target_dish_id: uuid.UUID,
                         session: Session = Depends(create_session)):
     return dish_crud.delete_dish(target_menu_id, target_submenu_id, target_dish_id, session)
