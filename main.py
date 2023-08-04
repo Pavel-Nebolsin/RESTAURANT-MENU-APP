@@ -1,21 +1,13 @@
-import time
 import uuid
 from crud import menu_crud, submenu_crud, dish_crud
-from fastapi import FastAPI, status, HTTPException, Body, Depends
-from sqlalchemy import func, distinct
+from fastapi import FastAPI, status, Body, Depends
 from sqlalchemy.orm import Session
-from starlette.responses import JSONResponse, HTMLResponse
+from starlette.responses import JSONResponse
 from typing import List
 import schemas
-from db import SessionLocal
-from models.models import Menu, SubMenu, Dish
+from db import create_session
 
 app = FastAPI(title='Y_LAB MENU API')
-
-
-def create_session() -> Session:
-    with SessionLocal() as session:
-        yield session
 
 # Menu
 # Возвращает все меню
