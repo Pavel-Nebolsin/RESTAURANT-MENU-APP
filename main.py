@@ -1,11 +1,5 @@
-import uuid
-from repository import menu, submenu, dish
-from fastapi import FastAPI, status, Body, Depends
-from sqlalchemy.orm import Session
-from starlette.responses import JSONResponse
-from typing import List
-from models import schemas
-from db import create_session
+from cache.cache import Cache
+from fastapi import FastAPI
 from routers import menu_router, submenu_router, dish_router
 
 app = FastAPI(title='Y_LAB RESTAURANT API')

@@ -20,6 +20,7 @@ class SubMenuRepository:
     def get_all(self, target_menu_id: uuid.UUID) -> List[schemas.AllSubmenu]:
 
         submenus = self.session.query(SubMenu).filter(SubMenu.menu_id == target_menu_id).all()
+
         submenu_responses = []
 
         for submenu in submenus:

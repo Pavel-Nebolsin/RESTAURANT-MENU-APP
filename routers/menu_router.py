@@ -14,6 +14,7 @@ router = APIRouter()
 def get_all_menus_handler(menu: MenuService = Depends()) -> List[schemas.AllMenu]:
     return menu.get_all()
 
+
 # Возвращает меню
 @router.get('/{target_menu_id}', response_model=schemas.AllMenu)
 def get_menu_handler(target_menu_id: uuid.UUID, menu: MenuService = Depends()):
@@ -24,6 +25,7 @@ def get_menu_handler(target_menu_id: uuid.UUID, menu: MenuService = Depends()):
 @router.post('/', response_model=schemas.MenuOut, status_code=status.HTTP_201_CREATED)
 def create_menu_handler(menu_data: schemas.MenuBase, menu: MenuService = Depends()):
     return menu.create(menu_data)
+
 
 # Обновляет меню
 @router.patch('/{target_menu_id}', response_model=schemas.MenuOut)
