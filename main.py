@@ -1,5 +1,5 @@
 import uuid
-from crud import menu_crud, submenu_crud, dish_crud
+from repository import menu, submenu, dish
 from fastapi import FastAPI, status, Body, Depends
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
@@ -8,7 +8,7 @@ from models import schemas
 from db import create_session
 from routers import menu_router, submenu_router, dish_router
 
-app = FastAPI(title='Y_LAB MENU API')
+app = FastAPI(title='Y_LAB RESTAURANT API')
 
 app.include_router(menu_router.router,
                    prefix="/api/v1/menus",
