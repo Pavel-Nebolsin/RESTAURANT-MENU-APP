@@ -1,23 +1,21 @@
 import uuid
-from typing import List
 
-from fastapi import HTTPException, Depends
+from fastapi import Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
 from db import create_session
 from models import schemas
-from models.models import Menu, SubMenu, Dish
+from models.models import Dish, Menu, SubMenu
 
 
 class SubMenuRepository:
 
-    def __init__(self, session: Session = Depends(create_session)):
+    def __init__(self, session: Session = Depends(create_session)) -> None:
         self.session: Session = session
-        self.model = SubMenu
 
-    def get_all(self, target_menu_id: uuid.UUID) -> List[schemas.AllSubmenu]:
+    def get_all(self, target_menu_id: uuid.UUID) -> list[schemas.AllSubmenu]:
 
         submenus = self.session.query(SubMenu).filter(SubMenu.menu_id == target_menu_id).all()
 

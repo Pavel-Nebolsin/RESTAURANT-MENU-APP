@@ -1,21 +1,21 @@
 import uuid
-from typing import List
-from fastapi import HTTPException, Depends
+
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
+
 from db import create_session
 from models import schemas
-from models.models import Menu, SubMenu, Dish
+from models.models import Dish, Menu, SubMenu
 
 
 class MenuRepository:
 
-    def __init__(self, session: Session = Depends(create_session)):
+    def __init__(self, session: Session = Depends(create_session)) -> None:
         self.session: Session = session
         self.model = Menu
 
-    # Функция для подсчета количества подменю и блюд, и выдачи списка меню
-    def get_all(self) -> List[schemas.AllMenu]:
+    def get_all(self) -> list[schemas.AllMenu]:
         menus = self.session.query(self.model).all()
         menu_responses = []
         for menu in menus:

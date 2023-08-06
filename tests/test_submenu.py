@@ -1,5 +1,6 @@
 import requests
-from config import *
+from tests_config import prefix, test_data
+
 
 # ТЕСТЫ ДЛЯ ПОДМЕНЮ:
 # Создаем меню

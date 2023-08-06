@@ -1,5 +1,6 @@
 import requests
-from config import *
+from tests_config import prefix, test_data
+
 
 # ТЕСТЫ ДЛЯ БЛЮД:
 # Создаем меню
@@ -231,4 +232,3 @@ def test_DISH_15_get_menus():
     response = requests.get(url)
     assert response.status_code == 200
     assert response.json() == []
-

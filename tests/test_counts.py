@@ -1,5 +1,6 @@
 import requests
-from config import *
+from tests_config import prefix, test_data
+
 
 # ТЕСТЫ НА ПРОВЕРКУ КОЛИЧЕСТВА БЛЮД В ПОДМЕНЮ И МЕНЮ:
 # Создаем меню
@@ -66,11 +67,12 @@ def test_COUNT_3_create_dish1():
     # Сохраняем данные в словарь test_data
     test_data['target_dish1_id'] = response_json.get('id')
 
-
     # Проверяем, что response содержит id блюда 1
     assert test_data['target_dish1_id'] is not None
 
 # Создаем блюдо 2
+
+
 def test_COUNT_4_create_dish2():
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
@@ -89,11 +91,12 @@ def test_COUNT_4_create_dish2():
     # Сохраняем данные в словарь test_data
     test_data['target_dish2_id'] = response_json.get('id')
 
-
     # Проверяем, что response содержит id блюда 1
     assert test_data['target_dish2_id'] is not None
 
 # Просматриваем определенное меню
+
+
 def test_COUNT_5_view_menu():
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
@@ -113,6 +116,8 @@ def test_COUNT_5_view_menu():
     assert 2 == response_json.get('dishes_count')
 
 # Просматриваем определенное подменю
+
+
 def test_COUNT_6_view_submenu():
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
@@ -130,6 +135,8 @@ def test_COUNT_6_view_submenu():
     assert 2 == response_json.get('dishes_count')
 
 # Удаляет подменю
+
+
 def test_COUNT_7_delete_submenu():
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
@@ -140,6 +147,8 @@ def test_COUNT_7_delete_submenu():
     assert response.status_code == 200
 
 # Просматриваем список подменю
+
+
 def test_COUNT_8_list_submenus():
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus'
@@ -151,6 +160,8 @@ def test_COUNT_8_list_submenus():
     assert response.json() == []
 
 # Просматриваем список блюд
+
+
 def test_COUNT_9_get_dishes():
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
@@ -163,6 +174,8 @@ def test_COUNT_9_get_dishes():
     assert response.json() == []
 
 # Просматриваем определенное меню
+
+
 def test_COUNT_10_view_menu():
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
@@ -182,6 +195,8 @@ def test_COUNT_10_view_menu():
     assert 0 == response_json.get('dishes_count')
 
 # Удаляем меню
+
+
 def test_COUNT_11_delete_menu():
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'

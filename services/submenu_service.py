@@ -1,20 +1,22 @@
 import uuid
-from typing import List
+
 from fastapi import Depends
 from starlette.responses import JSONResponse
-from cache.cache import cache
+
+from cache.cache import Cache, cache
 from models import schemas
 from models.models import SubMenu
 from models.schemas import SubMenuOut
-from repository.submenu import SubMenuRepository
+from repository.submenu_repository import SubMenuRepository
 
 
 class SubMenuService:
-    def __init__(self, repository: SubMenuRepository = Depends()):
-        self.repository = repository
-        self.cache = cache
 
-    def get_all(self, target_menu_id: uuid.UUID) -> List[schemas.AllSubmenu]:
+    def __init__(self, repository: SubMenuRepository = Depends()) -> None:
+        self.repository: SubMenuRepository = repository
+        self.cache: Cache = cache
+
+    def get_all(self, target_menu_id: uuid.UUID) -> list[schemas.AllSubmenu]:
         item = self.cache.cached_or_fetch('all_submenus',
                                           self.repository.get_all,
                                           target_menu_id)

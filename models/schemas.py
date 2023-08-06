@@ -1,11 +1,9 @@
-# Pydantic
 import uuid
 
-from pydantic import BaseModel, validator, field_validator, root_validator
-from typing import List, Optional
+from pydantic import BaseModel, field_validator
 
 
-###  MENU SCHEMA ###
+# MENU SCHEMAS
 class MenuBase(BaseModel):
     title: str
     description: str
@@ -23,14 +21,14 @@ class MenuOut(MenuBase):
 
 class AllMenu(MenuBase):
     id: uuid.UUID
-    submenus_count: Optional[int]
-    dishes_count: Optional[int]
+    submenus_count: int | None
+    dishes_count: int | None
 
     class Config:
         from_attributes = True
 
 
-###  SUBMENU SCHEMA ###
+# SUBMENU SCHEMAS
 
 class SubMenuBase(BaseModel):
     title: str
@@ -49,13 +47,13 @@ class SubMenuOut(SubMenuBase):
 
 class AllSubmenu(SubMenuBase):
     id: uuid.UUID
-    dishes_count: Optional[int]
+    dishes_count: int | None
 
     class Config:
         from_attributes = True
 
 
-###  DISH SCHEMA ###
+# DISH SCHEMAS
 
 class DishBase(BaseModel):
     title: str

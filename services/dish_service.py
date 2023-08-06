@@ -1,21 +1,21 @@
 import uuid
-from typing import List
+
 from fastapi import Depends
 from starlette.responses import JSONResponse
 
-from cache.cache import cache
+from cache.cache import Cache, cache
 from models import schemas
 from models.models import Dish
-from repository.dish import DishRepository
+from repository.dish_repository import DishRepository
 
 
 class DishService:
 
-    def __init__(self, repository: DishRepository = Depends()):
-        self.repository = repository
-        self.cache = cache
+    def __init__(self, repository: DishRepository = Depends()) -> None:
+        self.repository: DishRepository = repository
+        self.cache: Cache = cache
 
-    def get_all(self, target_submenu_id: uuid.UUID) -> List[schemas.DishOut]:
+    def get_all(self, target_submenu_id: uuid.UUID) -> list[schemas.DishOut]:
         item = self.cache.cached_or_fetch('all_dishes',
                                           self.repository.get_all,
                                           target_submenu_id)
