@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from db import create_session
+from db.db import create_session
 from models import schemas
 from models.models import Dish, Menu, SubMenu
 
