@@ -32,17 +32,17 @@ class MenuRepository:
         return menu_responses
 
     def get(self, target_menu_id: uuid.UUID) -> schemas.AllMenu:
-        # Получаем меню по айди
+
         menu = self.session.query(self.model).filter(self.model.id == target_menu_id).first()
 
         if not menu:
             raise HTTPException(status_code=404, detail='menu not found')
 
-        # Подсчитываем количество подменю и блюд для данного меню
-        submenus_count = self.session.query(SubMenu).filter(SubMenu.menu_id == target_menu_id).count()
-        dishes_count = self.session.query(Dish).join(SubMenu).filter(SubMenu.menu_id == target_menu_id).count()
+        submenus_count = self.session.query(SubMenu).filter(
+            SubMenu.menu_id == target_menu_id).count()
+        dishes_count = self.session.query(Dish).join(SubMenu).filter(
+            SubMenu.menu_id == target_menu_id).count()
 
-        # Создаем экземпляр схемы AllMenu и заполняем поля
         menu_response = schemas.AllMenu(
             id=menu.id,
             title=menu.title,
