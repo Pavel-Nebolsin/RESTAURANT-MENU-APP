@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 from cache.cache import Cache, cache
 from models import schemas
 from models.models import Dish
-from repository.dish_repository import DishRepository
+from repositories.dish_repository import DishRepository
 
 
 class DishService:

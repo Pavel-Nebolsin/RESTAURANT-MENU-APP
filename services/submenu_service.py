@@ -7,7 +7,7 @@ from cache.cache import Cache, cache
 from models import schemas
 from models.models import SubMenu
 from models.schemas import SubMenuOut
-from repository.submenu_repository import SubMenuRepository
+from repositories.submenu_repository import SubMenuRepository
 
 
 class SubMenuService:

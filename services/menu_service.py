@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 from cache.cache import Cache, cache
 from models import schemas
 from models.models import Menu
-from repository.menu_repository import MenuRepository
+from repositories.menu_repository import MenuRepository
 
 
 class MenuService:
