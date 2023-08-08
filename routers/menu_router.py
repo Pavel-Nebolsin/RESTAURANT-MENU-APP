@@ -4,6 +4,7 @@ from fastapi import APIRouter, Body, Depends, status
 from starlette.responses import JSONResponse
 
 from models import schemas
+from models.models import Menu
 from services.menu_service import MenuService
 
 router = APIRouter()
@@ -19,14 +20,16 @@ def get_all_menus_handler(menu: MenuService = Depends()) -> list[schemas.AllMenu
 @router.get('/{target_menu_id}', response_model=schemas.AllMenu,
             status_code=status.HTTP_200_OK,
             summary='Возвращает определённое меню')
-def get_menu_handler(target_menu_id: uuid.UUID, menu: MenuService = Depends()):
+def get_menu_handler(target_menu_id: uuid.UUID,
+                     menu: MenuService = Depends()) -> schemas.AllMenu:
     return menu.get(target_menu_id)
 
 
 @router.post('/', response_model=schemas.MenuOut,
              status_code=status.HTTP_201_CREATED,
              summary='Создаёт меню')
-def create_menu_handler(menu_data: schemas.MenuBase, menu: MenuService = Depends()):
+def create_menu_handler(menu_data: schemas.MenuBase,
+                        menu: MenuService = Depends()) -> Menu:
     return menu.create(menu_data)
 
 
@@ -34,12 +37,13 @@ def create_menu_handler(menu_data: schemas.MenuBase, menu: MenuService = Depends
               status_code=status.HTTP_200_OK,
               summary='Обновляет меню')
 def update_menu_handler(target_menu_id: uuid.UUID, menu_data: schemas.MenuBase = Body(...),
-                        menu: MenuService = Depends()) -> schemas.MenuOut:
+                        menu: MenuService = Depends()) -> Menu:
     return menu.update(target_menu_id, menu_data)
 
 
-@router.delete('/{target_menu_id}', response_model=schemas.MenuOut,
+@router.delete('/{target_menu_id}',
                status_code=status.HTTP_200_OK,
                summary='Удаляет меню')
-def delete_menu_handler(target_menu_id: uuid.UUID, menu: MenuService = Depends()) -> JSONResponse:
+def delete_menu_handler(target_menu_id: uuid.UUID,
+                        menu: MenuService = Depends()) -> JSONResponse:
     return menu.delete(target_menu_id)

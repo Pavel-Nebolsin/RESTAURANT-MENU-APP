@@ -3,7 +3,6 @@ from typing import Any, Callable
 
 import redis
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel
 
 
 class Cache:
@@ -22,7 +21,7 @@ class Cache:
     def cached_or_fetch(
             self,
             cache_key: str,
-            repository_function: Callable[..., list[BaseModel]],
+            repository_function: Callable[..., Any],
             *args: Any, **kwargs: Any) -> Any:
 
         cached_result = self.get(cache_key)
