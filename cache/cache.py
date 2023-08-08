@@ -9,7 +9,7 @@ class Cache:
     def __init__(self, redis_host: str) -> None:
         self.redis_client: redis.StrictRedis = redis.StrictRedis(host=redis_host, port=6379, db=0)
 
-    def get(self, key) -> str | None:
+    def get(self, key: str) -> str | None:
         cached_data = self.redis_client.get(key)
         if cached_data:
             return cached_data.decode('utf-8')

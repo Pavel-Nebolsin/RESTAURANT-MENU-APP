@@ -1,4 +1,5 @@
 import uuid
+from typing import Any
 
 from pydantic import BaseModel, field_validator
 
@@ -61,7 +62,7 @@ class DishBase(BaseModel):
     price: float
 
     @field_validator('price')
-    def format_price(cls, value):
+    def format_price(cls, value: Any) -> str:
         return str(value)
 
     class Config:

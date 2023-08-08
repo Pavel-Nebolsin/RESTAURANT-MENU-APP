@@ -10,7 +10,7 @@ class Base(DeclarativeBase):
 
 
 class Menu(Base):
-    __tablename__ = 'menu'
+    __tablename__: str = 'menu'
 
     id: Mapped[uuid.UUID] = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     title: Mapped[str] = Column(String, unique=True, nullable=False)
@@ -19,7 +19,7 @@ class Menu(Base):
 
 
 class SubMenu(Base):
-    __tablename__ = 'submenu'
+    __tablename__: str = 'submenu'
 
     id: Mapped[uuid.UUID] = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     title: Mapped[str] = Column(String, unique=True, nullable=False)
@@ -30,7 +30,7 @@ class SubMenu(Base):
 
 
 class Dish(Base):
-    __tablename__ = 'dish'
+    __tablename__: str = 'dish'
 
     id: Mapped[uuid.UUID] = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     title: Mapped[str] = Column(String, unique=True, nullable=False)
