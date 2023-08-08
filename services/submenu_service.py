@@ -31,7 +31,7 @@ class SubMenuService:
 
     def create(self, target_menu_id: uuid.UUID, submenu: schemas.SubMenuBase) -> SubMenu:
         item = self.repository.create(target_menu_id, submenu)
-        self.cache.invalidate('all_submenus')
+        self.cache.invalidate('all_submenus', 'all_menus', f'menu_{target_menu_id}')
         return item
 
     def update(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
