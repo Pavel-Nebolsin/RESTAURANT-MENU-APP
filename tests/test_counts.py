@@ -4,7 +4,7 @@ from tests_config import prefix, test_data
 
 # ТЕСТЫ НА ПРОВЕРКУ КОЛИЧЕСТВА БЛЮД В ПОДМЕНЮ И МЕНЮ:
 # Создаем меню
-def test_COUNT_1_create_menu():
+def test_COUNT_1_create_menu() -> None:
     url = f'{prefix}/menus/'
     data = {
         'title': 'Test Menu',
@@ -26,7 +26,7 @@ def test_COUNT_1_create_menu():
 
 
 # Создаем подменю
-def test_COUNT_2_create_submenu():
+def test_COUNT_2_create_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus'
     data = {
@@ -49,7 +49,7 @@ def test_COUNT_2_create_submenu():
 
 
 # Создаем блюдо 1
-def test_COUNT_3_create_dish1():
+def test_COUNT_3_create_dish1() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}/dishes'
@@ -73,7 +73,7 @@ def test_COUNT_3_create_dish1():
 # Создаем блюдо 2
 
 
-def test_COUNT_4_create_dish2():
+def test_COUNT_4_create_dish2() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}/dishes'
@@ -97,7 +97,7 @@ def test_COUNT_4_create_dish2():
 # Просматриваем определенное меню
 
 
-def test_COUNT_5_view_menu():
+def test_COUNT_5_view_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     response = requests.get(url)
@@ -118,7 +118,7 @@ def test_COUNT_5_view_menu():
 # Просматриваем определенное подменю
 
 
-def test_COUNT_6_view_submenu():
+def test_COUNT_6_view_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}/'
@@ -137,7 +137,7 @@ def test_COUNT_6_view_submenu():
 # Удаляет подменю
 
 
-def test_COUNT_7_delete_submenu():
+def test_COUNT_7_delete_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}'
@@ -149,7 +149,7 @@ def test_COUNT_7_delete_submenu():
 # Просматриваем список подменю
 
 
-def test_COUNT_8_list_submenus():
+def test_COUNT_8_list_submenus() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus'
     response = requests.get(url)
@@ -162,7 +162,7 @@ def test_COUNT_8_list_submenus():
 # Просматриваем список блюд
 
 
-def test_COUNT_9_get_dishes():
+def test_COUNT_9_get_dishes() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}/dishes'
@@ -176,7 +176,7 @@ def test_COUNT_9_get_dishes():
 # Просматриваем определенное меню
 
 
-def test_COUNT_10_view_menu():
+def test_COUNT_10_view_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     response = requests.get(url)
@@ -197,7 +197,7 @@ def test_COUNT_10_view_menu():
 # Удаляем меню
 
 
-def test_COUNT_11_delete_menu():
+def test_COUNT_11_delete_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     response = requests.delete(url)
@@ -205,7 +205,7 @@ def test_COUNT_11_delete_menu():
 
 
 # Просматриваем список меню
-def test_COUNT_12_get_menus():
+def test_COUNT_12_get_menus() -> None:
     url = f'{prefix}/menus/'
     response = requests.get(url)
     assert response.status_code == 200

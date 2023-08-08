@@ -2,9 +2,8 @@ import requests
 from tests_config import prefix, test_data
 
 
-# ТЕСТЫ ДЛЯ МЕНЮ:
 # Просматриваем список меню
-def test_MENU_1_get_menus():
+def test_MENU_1_get_menus() -> None:
     url = f'{prefix}/menus/'
     response = requests.get(url)
     assert response.status_code == 200
@@ -12,7 +11,7 @@ def test_MENU_1_get_menus():
 
 
 # Создаем меню
-def test_MENU_2_create_menu():
+def test_MENU_2_create_menu() -> None:
     url = f'{prefix}/menus/'
     data = {
         'title': 'Test Menu',
@@ -31,7 +30,7 @@ def test_MENU_2_create_menu():
 
 
 # Просматриваем список меню
-def test_MENU_3_list_menus():
+def test_MENU_3_list_menus() -> None:
     url = f'{prefix}/menus/'
     response = requests.get(url)
     assert response.status_code == 200
@@ -39,7 +38,7 @@ def test_MENU_3_list_menus():
 
 
 # Просматриваем определенное меню
-def test_MENU_4_view_menu():
+def test_MENU_4_view_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     response = requests.get(url)
@@ -51,7 +50,7 @@ def test_MENU_4_view_menu():
 
 
 # Обновляем меню
-def test_MENU_5_update_menu():
+def test_MENU_5_update_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     data = {
@@ -75,7 +74,7 @@ def test_MENU_5_update_menu():
 
 
 # Удаляем меню
-def test_MENU_6_delete_menu():
+def test_MENU_6_delete_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     response = requests.delete(url)
@@ -83,7 +82,7 @@ def test_MENU_6_delete_menu():
 
 
 # Просматриваем список меню
-def test_MENU_7_get_menus():
+def test_MENU_7_get_menus() -> None:
     url = f'{prefix}/menus/'
     response = requests.get(url)
     assert response.status_code == 200
@@ -91,7 +90,7 @@ def test_MENU_7_get_menus():
 
 
 # Просматриваем определенное меню
-def test_MENU_8_view_menu():
+def test_MENU_8_view_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     response = requests.get(url)

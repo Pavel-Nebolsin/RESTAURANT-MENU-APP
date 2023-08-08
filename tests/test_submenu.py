@@ -2,9 +2,8 @@ import requests
 from tests_config import prefix, test_data
 
 
-# ТЕСТЫ ДЛЯ ПОДМЕНЮ:
 # Создаем меню
-def test_SUBMENU_9_create_menu():
+def test_SUBMENU_9_create_menu() -> None:
     url = f'{prefix}/menus/'
     data = {
         'title': 'Test Menu',
@@ -21,7 +20,7 @@ def test_SUBMENU_9_create_menu():
 
 
 # Просматриваем список подменю
-def test_SUBMENU_1_list_submenus():
+def test_SUBMENU_1_list_submenus() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus'
     response = requests.get(url)
@@ -31,7 +30,7 @@ def test_SUBMENU_1_list_submenus():
 
 
 # Создаем подменю
-def test_SUBMENU_2_create_submenu():
+def test_SUBMENU_2_create_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus'
     data = {
@@ -52,7 +51,7 @@ def test_SUBMENU_2_create_submenu():
 
 
 # Просматриваем список подменю
-def test_SUBMENU_3_list_submenus():
+def test_SUBMENU_3_list_submenus() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus'
     response = requests.get(url)
@@ -62,7 +61,7 @@ def test_SUBMENU_3_list_submenus():
 
 
 # Просматриваем определенное подменю
-def test_SUBMENU_4_view_submenu():
+def test_SUBMENU_4_view_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}'
@@ -77,7 +76,7 @@ def test_SUBMENU_4_view_submenu():
 
 
 # Обновляем определенное подменю
-def test_SUBMENU_5_update_submenu():
+def test_SUBMENU_5_update_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}'
@@ -104,7 +103,7 @@ def test_SUBMENU_5_update_submenu():
 
 
 # Просматриваем определенное подменю
-def test_SUBMENU_6_view_submenu():
+def test_SUBMENU_6_view_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}'
@@ -119,7 +118,7 @@ def test_SUBMENU_6_view_submenu():
 
 
 # Удаляем подменю
-def test_SUBMENU_7_delete_submenu():
+def test_SUBMENU_7_delete_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}'
@@ -129,7 +128,7 @@ def test_SUBMENU_7_delete_submenu():
 
 
 # Просматриваем список подменю
-def test_SUBMENU_8_list_submenus():
+def test_SUBMENU_8_list_submenus() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus'
     response = requests.get(url)
@@ -139,7 +138,7 @@ def test_SUBMENU_8_list_submenus():
 
 
 # Просматриваем определенное подменю
-def test_SUBMENU_9_view_submenu():
+def test_SUBMENU_9_view_submenu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     target_submenu_id = test_data.get('target_submenu_id')
     url = f'{prefix}/menus/{target_menu_id}/submenus/{target_submenu_id}'
@@ -150,7 +149,7 @@ def test_SUBMENU_9_view_submenu():
 
 
 # Удаляем меню
-def test_SUBMENU_10_delete_menu():
+def test_SUBMENU_10_delete_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
     url = f'{prefix}/menus/{target_menu_id}/'
     response = requests.delete(url)
@@ -158,7 +157,7 @@ def test_SUBMENU_10_delete_menu():
 
 
 # Просматриваем список меню
-def test_SUBMENU_11_get_menus():
+def test_SUBMENU_11_get_menus() -> None:
     url = f'{prefix}/menus/'
     response = requests.get(url)
     assert response.status_code == 200
