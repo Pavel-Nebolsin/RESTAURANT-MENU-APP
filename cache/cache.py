@@ -4,10 +4,12 @@ from typing import Any, Callable
 import aioredis
 from fastapi.encoders import jsonable_encoder
 
+from config import REDIS_HOST, REDIS_PORT
+
 
 class Cache:
-    def __init__(self, redis_url: str) -> None:
-        self.redis_client: aioredis.Redis = aioredis.from_url(redis_url)
+    def __init__(self, redis_host: str, redis_port: str) -> None:
+        self.redis_client: aioredis.Redis = aioredis.from_url(f'redis://{redis_host}:{redis_port}')
 
     async def get(self, key: str) -> str | None:
         cached_data = await self.redis_client.get(key)
@@ -37,4 +39,4 @@ class Cache:
         await self.redis_client.delete(*args)
 
 
-cache = Cache('redis://redis:6379')
+cache = Cache(REDIS_HOST, REDIS_PORT)

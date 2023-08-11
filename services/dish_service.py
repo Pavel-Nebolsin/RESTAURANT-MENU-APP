@@ -4,9 +4,8 @@ from fastapi import Depends
 from starlette.responses import JSONResponse
 
 from cache.cache import Cache, cache
-from models import schemas
-from models.models import Dish
 from repositories.dish_repository import DishRepository
+from schemas.dish_schema import DishBase, DishSchema
 
 
 class DishService:
@@ -15,14 +14,14 @@ class DishService:
         self.repository: DishRepository = repository
         self.cache: Cache = cache
 
-    async def get_all(self, target_submenu_id: uuid.UUID) -> list[schemas.DishOut]:
+    async def get_all(self, target_submenu_id: uuid.UUID) -> list[DishSchema]:
         item = await self.cache.cached_or_fetch('all_dishes',
                                                 self.repository.get_all,
                                                 target_submenu_id)
         return item
 
     async def get(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
-                  target_dish_id: uuid.UUID) -> schemas.AllDish:
+                  target_dish_id: uuid.UUID) -> DishSchema:
         item = await self.cache.cached_or_fetch(f'dish_{target_dish_id}',
                                                 self.repository.get,
                                                 target_menu_id,
@@ -31,7 +30,7 @@ class DishService:
         return item
 
     async def create(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
-                     dish_data: schemas.DishBase) -> Dish:
+                     dish_data: DishBase) -> DishSchema:
         item = await self.repository.create(target_menu_id,
                                             target_submenu_id,
                                             dish_data)
@@ -41,7 +40,7 @@ class DishService:
         return item
 
     async def update(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, target_dish_id: uuid.UUID,
-                     dish_data: schemas.DishBase) -> schemas.DishOut:
+                     dish_data: DishBase) -> DishSchema:
         item = await self.repository.update(target_menu_id,
                                             target_submenu_id,
                                             target_dish_id,

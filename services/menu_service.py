@@ -4,9 +4,8 @@ from fastapi import Depends
 from starlette.responses import JSONResponse
 
 from cache.cache import Cache, cache
-from models import schemas
-from models.models import Menu
 from repositories.menu_repository import MenuRepository
+from schemas.menu_schema import MenuBase, MenuSchema
 
 
 class MenuService:
@@ -15,20 +14,20 @@ class MenuService:
         self.repository: MenuRepository = repository
         self.cache: Cache = cache
 
-    async def get_all(self) -> list[schemas.AllMenu]:
+    async def get_all(self) -> list[MenuSchema]:
         item = await self.cache.cached_or_fetch('all_menus', self.repository.get_all)
         return item
 
-    async def get(self, target_menu_id: uuid.UUID) -> schemas.AllMenu:
+    async def get(self, target_menu_id: uuid.UUID) -> MenuSchema:
         item = await self.cache.cached_or_fetch(f'menu_{target_menu_id}', self.repository.get, target_menu_id)
         return item
 
-    async def create(self, menu: schemas.MenuBase) -> Menu:
+    async def create(self, menu: MenuBase) -> MenuSchema:
         item = await self.repository.create(menu)
         await self.cache.invalidate('all_menus')
         return item
 
-    async def update(self, target_menu_id: uuid.UUID, menu_data: schemas.MenuBase) -> Menu:
+    async def update(self, target_menu_id: uuid.UUID, menu_data: MenuBase) -> MenuSchema:
         item = await self.repository.update(target_menu_id, menu_data)
         await self.cache.invalidate('all_menus', f'menu_{target_menu_id}')
         return item

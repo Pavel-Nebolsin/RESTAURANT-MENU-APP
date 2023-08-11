@@ -1,13 +1,14 @@
 import uuid
 
 from fastapi import Depends, HTTPException
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
 from db.db import create_session
-from models import schemas
-from models.models import Dish, Menu, SubMenu
+from models.models import Menu, SubMenu
+from repositories.repository_utils import get_counts
+from schemas.submenu_schema import SubMenuBase, SubMenuSchema
 
 
 class SubMenuRepository:
@@ -15,31 +16,40 @@ class SubMenuRepository:
     def __init__(self, session: AsyncSession = Depends(create_session)) -> None:
         self.session: AsyncSession = session
 
-    async def get_all(self, target_menu_id: uuid.UUID) -> list[schemas.AllSubmenu]:
+    async def get_all(self, target_menu_id: uuid.UUID) -> list[SubMenuSchema]:
         submenus_query = select(SubMenu).where(SubMenu.menu_id == target_menu_id)
         submenus = await self.session.execute(submenus_query)
         submenus = submenus.scalars().all()
 
         submenu_responses = []
-
         for submenu in submenus:
-            dishes_count_query = select(func.count(Dish.id)).where(Dish.submenu_id == submenu.id)
-            dishes_count = await self.session.execute(dishes_count_query)
-            dishes_count = dishes_count.scalar_one()
-
-            submenu_response = schemas.AllSubmenu(
-                id=submenu.id,
-                title=submenu.title,
-                description=submenu.description,
-                menu_id=submenu.menu_id,
+            _, dishes_count = await get_counts(self.session, target_menu_id, submenu.id)
+            submenu_response = SubMenuSchema(
+                **submenu.__dict__,
                 dishes_count=dishes_count
             )
-
             submenu_responses.append(submenu_response)
 
         return submenu_responses
 
-    async def create(self, target_menu_id: uuid.UUID, submenu_data: schemas.SubMenuBase) -> SubMenu:
+    async def get(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID) -> SubMenuSchema:
+        submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id,
+                                              SubMenu.menu_id == target_menu_id)
+        submenu = await self.session.execute(submenu_query)
+        submenu = submenu.scalar_one_or_none()
+
+        if not submenu:
+            raise HTTPException(status_code=404, detail='submenu not found')
+
+        _, dishes_count = await get_counts(self.session, target_menu_id, submenu.id)
+        submenu_response = SubMenuSchema(
+            **submenu.__dict__,
+            dishes_count=dishes_count
+        )
+
+        return submenu_response
+
+    async def create(self, target_menu_id: uuid.UUID, submenu_data: SubMenuBase) -> SubMenuSchema:
         menu_query = select(Menu).where(Menu.id == target_menu_id)
         menu = await self.session.execute(menu_query)
         menu = menu.scalar_one()
@@ -51,33 +61,14 @@ class SubMenuRepository:
         self.session.add(new_submenu)
         await self.session.commit()
         await self.session.refresh(new_submenu)
-        return new_submenu
 
-    async def get(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID) -> schemas.AllSubmenu:
-        submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id, SubMenu.menu_id == target_menu_id)
-        submenu = await self.session.execute(submenu_query)
-        submenu = submenu.scalar_one_or_none()
-
-        if not submenu:
-            raise HTTPException(status_code=404, detail='submenu not found')
-
-        dishes_count_query = select(func.count(Dish.id)).where(Dish.submenu_id == target_submenu_id)
-        dishes_count = await self.session.execute(dishes_count_query)
-        dishes_count = dishes_count.scalar_one()
-
-        submenu_response = schemas.AllSubmenu(
-            id=submenu.id,
-            title=submenu.title,
-            description=submenu.description,
-            menu_id=submenu.menu_id,
-            dishes_count=dishes_count
-        )
-
+        submenu_response = SubMenuSchema(**new_submenu.__dict__)
         return submenu_response
 
     async def update(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
-                     submenu_data: schemas.SubMenuBase) -> schemas.SubMenuOut:
-        submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id, SubMenu.menu_id == target_menu_id)
+                     submenu_data: SubMenuBase) -> SubMenuSchema:
+        submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id,
+                                              SubMenu.menu_id == target_menu_id)
         submenu = await self.session.execute(submenu_query)
         submenu = submenu.scalar_one()
 
@@ -89,7 +80,8 @@ class SubMenuRepository:
         await self.session.commit()
         await self.session.refresh(submenu)
 
-        return submenu
+        submenu_response = SubMenuSchema(**submenu.__dict__)
+        return submenu_response
 
     async def delete(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID) -> JSONResponse:
         submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id, SubMenu.menu_id == target_menu_id)

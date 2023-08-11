@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
 from db.db import create_session
-from models import schemas
 from models.models import Dish, Menu, SubMenu
+from schemas.dish_schema import DishBase, DishSchema
 
 
 class DishRepository:
@@ -15,14 +15,16 @@ class DishRepository:
     def __init__(self, session: AsyncSession = Depends(create_session)) -> None:
         self.session: AsyncSession = session
 
-    async def get_all(self, target_submenu_id: uuid.UUID) -> list[schemas.DishOut]:
+    async def get_all(self, target_submenu_id: uuid.UUID) -> list[DishSchema]:
         dishes_query = select(Dish).where(Dish.submenu_id == target_submenu_id)
         result = await self.session.execute(dishes_query)
         dishes = result.scalars().all()
-        return list(dishes)
+
+        dishes_response = [DishSchema(**dish.__dict__) for dish in dishes]
+        return dishes_response
 
     async def get(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
-                  target_dish_id: uuid.UUID) -> Dish:
+                  target_dish_id: uuid.UUID) -> DishSchema:
         dish_query = (
             select(Dish)
             .join(SubMenu, SubMenu.id == Dish.submenu_id)
@@ -35,10 +37,12 @@ class DishRepository:
 
         if not dish:
             raise HTTPException(status_code=404, detail='dish not found')
-        return dish
+
+        dish_response = DishSchema(**dish.__dict__)
+        return dish_response
 
     async def create(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
-                     dish_data: schemas.DishBase) -> Dish:
+                     dish_data: DishBase) -> DishSchema:
         menu_query = select(Menu).where(Menu.id == target_menu_id)
         menu = await self.session.execute(menu_query)
         menu = menu.scalar_one()
@@ -56,10 +60,12 @@ class DishRepository:
         self.session.add(new_dish)
         await self.session.commit()
         await self.session.refresh(new_dish)
-        return new_dish
+
+        dish_response = DishSchema(**new_dish.__dict__)
+        return dish_response
 
     async def update(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
-                     target_dish_id: uuid.UUID, dish_data: schemas.DishBase) -> Dish:
+                     target_dish_id: uuid.UUID, dish_data: DishBase) -> DishSchema:
         dish_query = (
             select(Dish)
             .join(SubMenu, SubMenu.id == Dish.submenu_id)
@@ -78,7 +84,9 @@ class DishRepository:
 
         await self.session.commit()
         await self.session.refresh(dish)
-        return dish
+
+        dish_response = DishSchema(**dish.__dict__)
+        return dish_response
 
     async def delete(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
                      target_dish_id: uuid.UUID) -> JSONResponse:
