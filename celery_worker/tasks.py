@@ -1,6 +1,7 @@
 import copy
 import logging
 import uuid
+from typing import Any
 
 import api_requests
 import openpyxl
@@ -12,10 +13,10 @@ app = Celery('tasks',
              broker='amqp://admin:mypass@rabbit:5672',
              backend='rpc://')
 
-new_objects_dict: dict[str, list] = {'menus': [], 'submenus': [], 'dishes': []}
-old_objects_dict: dict[str, list] = {'menus': [], 'submenus': [], 'dishes': []}
+new_objects_dict: Any = {'menus': [], 'submenus': [], 'dishes': []}
+old_objects_dict: Any = {'menus': [], 'submenus': [], 'dishes': []}
 
-data_to_process: dict[str, dict[str, list]] = {
+data_to_process: Any = {
     'to_add': {'menus': [], 'submenus': [], 'dishes': []},
     'to_update': {'menus': [], 'submenus': [], 'dishes': []},
     'to_delete': {'menus': [], 'submenus': [], 'dishes': []}
