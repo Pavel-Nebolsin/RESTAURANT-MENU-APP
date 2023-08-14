@@ -112,20 +112,16 @@ def add_or_update(old_list, new_list, model):
 
 def check_for_added_or_updated(new_dict, old_dict):
     for model_type in ['menus', 'submenus', 'dishes']:
-        # if len(new_dict[model_type]) >= len(old_dict[model_type]):
-        if True:
-            objects_to_add_or_update = compare_lists(new_dict[model_type], old_dict[model_type])
-            to_add, to_update = add_or_update(old_dict[model_type], objects_to_add_or_update, model=model_type)
-            data_to_process['to_add'][model_type] += to_add
-            data_to_process['to_update'][model_type] += to_update
+        objects_to_add_or_update = compare_lists(new_dict[model_type], old_dict[model_type])
+        to_add, to_update = add_or_update(old_dict[model_type], objects_to_add_or_update, model=model_type)
+        data_to_process['to_add'][model_type] += to_add
+        data_to_process['to_update'][model_type] += to_update
 
 
 def check_for_deleted(new_dict, old_dict):
     for model_type in ['menus', 'submenus', 'dishes']:
-        # if len(new_dict[model_type]) < len(old_dict[model_type]):
-        if True:
-            objects_to_delete = compare_lists(old_dict[model_type], new_dict[model_type])
-            data_to_process['to_delete'][model_type] += objects_to_delete
+        objects_to_delete = compare_lists(old_dict[model_type], new_dict[model_type])
+        data_to_process['to_delete'][model_type] += objects_to_delete
 
 
 def parse_xlsx(url):
