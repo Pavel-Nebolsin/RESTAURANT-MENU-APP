@@ -40,6 +40,6 @@ class SubMenuService:
 
     async def delete(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID) -> JSONResponse:
         item = await self.repository.delete(target_menu_id, target_submenu_id)
-        await self.cache.invalidate('all_submenus', 'all_menus', f'submenu_{target_submenu_id}',
+        await self.cache.invalidate('all_menus', 'all_submenus', f'submenu_{target_submenu_id}',
                                     f'menu_{target_menu_id}')
         return item

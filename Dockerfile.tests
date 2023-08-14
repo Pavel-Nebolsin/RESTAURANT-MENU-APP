@@ -1,7 +1,7 @@
 # Dockerfile для тестов
 FROM python:3.10-slim
 
-RUN pip install pytest requests
+RUN pip install pytest requests aiohttp pytest-asyncio
 
 COPY tests/ /app/tests/
 

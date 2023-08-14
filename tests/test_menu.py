@@ -1,103 +1,125 @@
-import requests
+import aiohttp
+import pytest
 from tests_config import prefix, test_data
 
 
-# Просматриваем список меню
-def test_MENU_1_get_menus() -> None:
-    url = f'{prefix}/menus/'
-    response = requests.get(url)
-    assert response.status_code == 200
-    assert response.json() == []
+@pytest.mark.asyncio
+async def test_MENU_1_get_menus() -> None:
+    url = f'{prefix}/menus'
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            assert response.status == 200
+            assert await response.json() == []
 
 
-# Создаем меню
-def test_MENU_2_create_menu() -> None:
-    url = f'{prefix}/menus/'
+@pytest.mark.asyncio
+async def test_MENU_2_create_menu() -> None:
+    url = f'{prefix}/menus'
     data = {
         'title': 'Test Menu',
         'description': 'This is a test menu'
     }
-    response = requests.post(url, json=data)
-    assert response.status_code == 201
 
-    test_data['target_menu_id'] = response.json().get('id')
-    test_data['target_menu_title'] = response.json().get('title')
-    test_data['target_menu_description'] = response.json().get('description')
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, json=data) as response:
+            assert response.status == 201
 
-    assert test_data['target_menu_id'] is not None
-    assert test_data['target_menu_title'] == 'Test Menu'
-    assert test_data['target_menu_description'] == 'This is a test menu'
+            response_json = await response.json()
+            test_data['target_menu_id'] = response_json.get('id')
+            test_data['target_menu_title'] = response_json.get('title')
+            test_data['target_menu_description'] = response_json.get('description')
+
+            assert test_data['target_menu_id'] is not None
+            assert test_data['target_menu_title'] == 'Test Menu'
+            assert test_data['target_menu_description'] == 'This is a test menu'
 
 
-# Просматриваем список меню
-def test_MENU_3_list_menus() -> None:
+@pytest.mark.asyncio
+async def test_MENU_3_list_menus() -> None:
     url = f'{prefix}/menus/'
-    response = requests.get(url)
-    assert response.status_code == 200
-    assert response.json() != []
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            assert response.status == 200
+            assert await response.json() != []
 
 
 # Просматриваем определенное меню
-def test_MENU_4_view_menu() -> None:
+@pytest.mark.asyncio
+async def test_MENU_4_view_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
-    url = f'{prefix}/menus/{target_menu_id}/'
-    response = requests.get(url)
-    assert response.status_code == 200
-    response_json = response.json()
-    assert response_json['id'] == target_menu_id
-    assert response_json['title'] == test_data.get('target_menu_title')
-    assert response_json['description'] == test_data.get('target_menu_description')
+    url = f'{prefix}/menus/{target_menu_id}'
 
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            assert response.status == 200
+            response_json = await response.json()
+
+            assert response_json['id'] == target_menu_id
+            assert response_json['title'] == test_data.get('target_menu_title')
+            assert response_json['description'] == test_data.get('target_menu_description')
 
 # Обновляем меню
-def test_MENU_5_update_menu() -> None:
+
+
+@pytest.mark.asyncio
+async def test_MENU_5_update_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
-    url = f'{prefix}/menus/{target_menu_id}/'
+    url = f'{prefix}/menus/{target_menu_id}'
     data = {
         'title': 'Updated Test Menu',
         'description': 'This is an updated test menu'
     }
-    response = requests.patch(url, json=data)
-    assert response.status_code == 200
 
-    # Проверяем, что данные изменились
-    assert test_data['target_menu_title'] != data['title']
-    assert test_data['target_menu_description'] != data['description']
+    async with aiohttp.ClientSession() as session:
+        async with session.patch(url, json=data) as response:
+            assert response.status == 200
 
-    # Сохраняем обновленные данные в словарь
-    test_data['target_menu_title'] = data['title']
-    test_data['target_menu_description'] = data['description']
+            assert test_data['target_menu_title'] != data['title']
+            assert test_data['target_menu_description'] != data['description']
 
-    # Проверяем, что данные соответствуют обновленным данным
-    assert test_data['target_menu_title'] == response.json().get('title')
-    assert test_data['target_menu_description'] == response.json().get('description')
+            test_data['target_menu_title'] = data['title']
+            test_data['target_menu_description'] = data['description']
 
+            response_json = await response.json()
+            assert test_data['target_menu_title'] == response_json.get('title')
+            assert test_data['target_menu_description'] == response_json.get('description')
 
 # Удаляем меню
-def test_MENU_6_delete_menu() -> None:
-    target_menu_id = test_data.get('target_menu_id')
-    url = f'{prefix}/menus/{target_menu_id}/'
-    response = requests.delete(url)
-    assert response.status_code == 200
 
+
+@pytest.mark.asyncio
+async def test_MENU_6_delete_menu() -> None:
+    target_menu_id = test_data.get('target_menu_id')
+    url = f'{prefix}/menus/{target_menu_id}'
+
+    async with aiohttp.ClientSession() as session:
+        async with session.delete(url) as response:
+            assert response.status == 200
 
 # Просматриваем список меню
-def test_MENU_7_get_menus() -> None:
-    url = f'{prefix}/menus/'
-    response = requests.get(url)
-    assert response.status_code == 200
-    assert response.json() == []
 
+
+@pytest.mark.asyncio
+async def test_MENU_7_get_menus() -> None:
+    url = f'{prefix}/menus'
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            assert response.status == 200
+            assert await response.json() == []
 
 # Просматриваем определенное меню
-def test_MENU_8_view_menu() -> None:
+
+
+@pytest.mark.asyncio
+async def test_MENU_8_view_menu() -> None:
     target_menu_id = test_data.get('target_menu_id')
-    url = f'{prefix}/menus/{target_menu_id}/'
-    response = requests.get(url)
+    url = f'{prefix}/menus/{target_menu_id}'
 
-    # Проверяем, что запрос вернул 404 Not Found
-    assert response.status_code == 404
-
-    # Проверяем, что вернулось правильное сообщение о том, что меню не существует
-    response_json = response.json()
-    assert response_json['detail'] == 'menu not found'
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            assert response.status == 404
+            response_json = await response.json()
+            assert response_json['detail'] == 'menu not found'
