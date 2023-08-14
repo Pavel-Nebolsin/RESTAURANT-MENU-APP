@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class MenuBase(BaseModel):
+    id: uuid.UUID | None = None
     title: str
     description: str
 

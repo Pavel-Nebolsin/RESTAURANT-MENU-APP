@@ -45,11 +45,11 @@ class DishRepository:
                      dish_data: DishBase) -> DishSchema:
         menu_query = select(Menu).where(Menu.id == target_menu_id)
         menu = await self.session.execute(menu_query)
-        menu = menu.scalar_one()
+        menu = menu.scalar_one_or_none()
 
         submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id, SubMenu.menu_id == target_menu_id)
         submenu = await self.session.execute(submenu_query)
-        submenu = submenu.scalar_one()
+        submenu = submenu.scalar_one_or_none()
 
         if not menu:
             raise HTTPException(status_code=404, detail='menu not found')
@@ -74,13 +74,14 @@ class DishRepository:
             .where(Dish.id == target_dish_id)
         )
         dish = await self.session.execute(dish_query)
-        dish = dish.scalar_one()
+        dish = dish.scalar_one_or_none()
 
         if not dish:
             raise HTTPException(status_code=404, detail='dish not found')
 
         for field, value in dish_data.model_dump().items():
-            setattr(dish, field, value)
+            if field != 'id':
+                setattr(dish, field, value)
 
         await self.session.commit()
         await self.session.refresh(dish)
@@ -98,7 +99,7 @@ class DishRepository:
             .where(Dish.id == target_dish_id)
         )
         dish = await self.session.execute(dish_query)
-        dish = dish.scalar_one()
+        dish = dish.scalar_one_or_none()
 
         if not dish:
             raise HTTPException(status_code=404, detail='dish not found')

@@ -4,6 +4,7 @@ from pydantic import BaseModel, field_validator
 
 
 class DishBase(BaseModel):
+    id: uuid.UUID | None = None
     title: str
     description: str
     price: float

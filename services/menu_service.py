@@ -36,3 +36,7 @@ class MenuService:
         item = await self.repository.delete(target_menu_id)
         await self.cache.invalidate('all_menus', f'menu_{target_menu_id}')
         return item
+
+    async def all_menus_with_content(self):
+        item = await self.repository.all_menus_with_content()
+        return item

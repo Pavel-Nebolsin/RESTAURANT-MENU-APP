@@ -52,7 +52,7 @@ class SubMenuRepository:
     async def create(self, target_menu_id: uuid.UUID, submenu_data: SubMenuBase) -> SubMenuSchema:
         menu_query = select(Menu).where(Menu.id == target_menu_id)
         menu = await self.session.execute(menu_query)
-        menu = menu.scalar_one()
+        menu = menu.scalar_one_or_none()
 
         if not menu:
             raise HTTPException(status_code=404, detail='menu not found')
@@ -70,7 +70,7 @@ class SubMenuRepository:
         submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id,
                                               SubMenu.menu_id == target_menu_id)
         submenu = await self.session.execute(submenu_query)
-        submenu = submenu.scalar_one()
+        submenu = submenu.scalar_one_or_none()
 
         if not submenu:
             raise HTTPException(status_code=404, detail='submenu not found')
@@ -86,7 +86,7 @@ class SubMenuRepository:
     async def delete(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID) -> JSONResponse:
         submenu_query = select(SubMenu).where(SubMenu.id == target_submenu_id, SubMenu.menu_id == target_menu_id)
         submenu = await self.session.execute(submenu_query)
-        submenu = submenu.scalar_one()
+        submenu = submenu.scalar_one_or_none()
 
         if not submenu:
             raise HTTPException(status_code=404, detail='submenu not found')

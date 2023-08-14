@@ -13,8 +13,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      rabbit:
-        condition: service_healthy
     env_file:
       - .env
     entrypoint: sh -c "alembic upgrade head
@@ -43,32 +41,17 @@ services:
     networks:
       - my_network
 
-  celery:
-    build: './celery_worker'
+  tests:
+    # Сервис для запуска тестов
+    container_name: crud_tests
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
     depends_on:
       - api
-      - rabbit
-    volumes:
-      - ./admin:/admin
+      - db
     networks:
       - my_network
-
-  rabbit:
-    hostname: rabbit
-    image: "rabbitmq:3-management"
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=mypass
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    networks:
-      - my_network
-    healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
-      interval: 10s
-      timeout: 3s
-      retries: 3
 
 networks:
   my_network:
