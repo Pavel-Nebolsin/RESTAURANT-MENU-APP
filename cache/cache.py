@@ -33,11 +33,12 @@ class Cache:
 
         items = await repository_function(*args, **kwargs)
         json_compatible_value = jsonable_encoder(items)
-        await self.set(cache_key, json.dumps(json_compatible_value))
+
+        background_tasks = BackgroundTasks()
+        background_tasks.add_task(self.set, cache_key, json.dumps(json_compatible_value))
         return items
 
-    async def invalidate(self, *args: str) -> None:
-        await self.redis_client.delete(*args)
+    def invalidate(self, *args: str) -> None:
         background_tasks = BackgroundTasks()
         background_tasks.add_task(self.background_invalidation, *args)
 

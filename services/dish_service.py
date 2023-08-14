@@ -31,9 +31,9 @@ class DishService:
 
     async def create(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
                      dish_data: DishBase) -> DishSchema:
-        await self.cache.invalidate('all_dishes', 'all_submenus', 'all_menus',
-                                    f'menu_{target_menu_id}',
-                                    f'submenu_{target_submenu_id}')
+        self.cache.invalidate('all_dishes', 'all_submenus', 'all_menus',
+                              f'menu_{target_menu_id}',
+                              f'submenu_{target_submenu_id}')
         item = await self.repository.create(target_menu_id,
                                             target_submenu_id,
                                             dish_data)
@@ -41,7 +41,7 @@ class DishService:
 
     async def update(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID, target_dish_id: uuid.UUID,
                      dish_data: DishBase) -> DishSchema:
-        await self.cache.invalidate('all_dishes', f'dish_{target_dish_id}')
+        self.cache.invalidate('all_dishes', f'dish_{target_dish_id}')
         item = await self.repository.update(target_menu_id,
                                             target_submenu_id,
                                             target_dish_id,
@@ -50,9 +50,9 @@ class DishService:
 
     async def delete(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
                      target_dish_id: uuid.UUID) -> JSONResponse:
-        await self.cache.invalidate('all_dishes', 'all_submenus', 'all_menus',
-                                    f'dish_{target_dish_id}',
-                                    f'menu_{target_menu_id}',
-                                    f'submenu_{target_submenu_id}')
+        self.cache.invalidate('all_dishes', 'all_submenus', 'all_menus',
+                              f'dish_{target_dish_id}',
+                              f'menu_{target_menu_id}',
+                              f'submenu_{target_submenu_id}')
         item = await self.repository.delete(target_menu_id, target_submenu_id, target_dish_id)
         return item
