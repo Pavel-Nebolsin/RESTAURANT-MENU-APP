@@ -1,11 +1,17 @@
 import copy
 import logging
-import uuid
 from typing import Any
 
 import api_requests
 import openpyxl
 from celery import Celery
+from utils import (
+    add_or_update,
+    compare_lists,
+    is_valid_uuid,
+    remove_list_from_list,
+    replace_list_in_list,
+)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -31,7 +37,7 @@ def periodic_task():
 app.conf.beat_schedule = {
     'run-every-15-seconds': {
         'task': 'tasks.periodic_task',
-        'schedule': 10.0,
+        'schedule': 15.0,
     },
 }
 
@@ -39,21 +45,6 @@ app.conf.beat_schedule = {
 def clean_data_to_process():
     for key in data_to_process:
         data_to_process[key] = {'menus': [], 'submenus': [], 'dishes': []}
-
-
-def replace_list_in_list(main_list, replacement_list, data_type):
-    idx_list = {'menus': 0,
-                'submenus': 1,
-                'dishes': 2}
-    idx = idx_list[data_type]
-    target = replacement_list[idx]
-    for i, sublist in enumerate(main_list):
-        if len(sublist) > 0 and sublist[idx] == target:
-            main_list[i] = replacement_list
-
-
-def remove_list_from_list(main_list, target_list):
-    main_list[:] = [sublist for sublist in main_list if sublist != target_list]
 
 
 def process_objects(objects, operation):
@@ -73,41 +64,6 @@ def process_objects(objects, operation):
 def process_new_data(*args):
     for process_type in args:
         process_objects(data_to_process[process_type], process_type)
-
-
-def compare_lists(list1, list2):
-    missing_lists = []
-
-    for sublist in list1:
-        if sublist not in list2:
-            missing_lists.append(sublist)
-
-    return missing_lists
-
-
-def is_valid_uuid(uuid_string):
-    try:
-        uuid_string = str(uuid_string)
-        uuid_obj = uuid.UUID(uuid_string)
-        return str(uuid_obj) == uuid_string
-    except ValueError:
-        return False
-
-
-def add_or_update(old_list, new_list, model):
-    add = new_list.copy()
-    update = []
-    idx_list = {'menus': 0,
-                'submenus': 1,
-                'dishes': 2}
-    idx = idx_list[model]
-
-    for i, new_obj in enumerate(new_list):
-        for old_obj in old_list:
-            if new_obj[idx] == old_obj[idx]:
-                update.append(add.pop(i))
-
-    return add, update
 
 
 def check_for_added_or_updated(new_dict, old_dict):
@@ -148,21 +104,27 @@ def parse_xlsx(url):
     return result
 
 
+def print_logs():
+    print('new:', new_objects_dict['menus'], new_objects_dict['submenus'], new_objects_dict['dishes'], sep='\n')
+    print('old:', old_objects_dict['menus'], old_objects_dict['submenus'], old_objects_dict['dishes'], sep='\n')
+    print('to add:', data_to_process['to_add'])
+    print('to update:', data_to_process['to_update'])
+    print('to delete:', data_to_process['to_delete'])
+
+
 def main_task(url):
     global new_objects_dict
     global old_objects_dict
 
     new_objects_dict = parse_xlsx(url)
-    print('new:', new_objects_dict['menus'], new_objects_dict['submenus'], new_objects_dict['dishes'], sep='\n')
-    print('old:', old_objects_dict['menus'], old_objects_dict['submenus'], old_objects_dict['dishes'], sep='\n')
+
     check_for_added_or_updated(new_objects_dict, old_objects_dict)
     process_new_data('to_add', 'to_update')
+
     check_for_deleted(new_objects_dict, old_objects_dict)
     process_new_data('to_delete')
 
-    print('to add', data_to_process['to_add'])
-    print('to update', data_to_process['to_update'])
-    print('to delete', data_to_process['to_delete'])
+    print_logs()
 
     old_objects_dict = copy.deepcopy(new_objects_dict)
     clean_data_to_process()
