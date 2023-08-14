@@ -2,6 +2,7 @@ import json
 from typing import Any, Callable
 
 import aioredis
+from fastapi import BackgroundTasks
 from fastapi.encoders import jsonable_encoder
 
 from config import REDIS_HOST, REDIS_PORT
@@ -37,11 +38,11 @@ class Cache:
 
     async def invalidate(self, *args: str) -> None:
         await self.redis_client.delete(*args)
-    #     background_tasks = BackgroundTasks()
-    #     background_tasks.add_task(self.background_invalidation, *args)
-    #
-    # async def background_invalidation(self, *args):
-    #     await self.redis_client.delete(*args)
+        background_tasks = BackgroundTasks()
+        background_tasks.add_task(self.background_invalidation, *args)
+
+    async def background_invalidation(self, *args):
+        await self.redis_client.delete(*args)
 
 
 cache = Cache(REDIS_HOST, REDIS_PORT)

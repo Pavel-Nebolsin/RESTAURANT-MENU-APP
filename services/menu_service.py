@@ -23,18 +23,18 @@ class MenuService:
         return item
 
     async def create(self, menu: MenuBase) -> MenuSchema:
-        item = await self.repository.create(menu)
         await self.cache.invalidate('all_menus')
+        item = await self.repository.create(menu)
         return item
 
     async def update(self, target_menu_id: uuid.UUID, menu_data: MenuBase) -> MenuSchema:
-        item = await self.repository.update(target_menu_id, menu_data)
         await self.cache.invalidate('all_menus', f'menu_{target_menu_id}')
+        item = await self.repository.update(target_menu_id, menu_data)
         return item
 
     async def delete(self, target_menu_id: uuid.UUID) -> JSONResponse:
-        item = await self.repository.delete(target_menu_id)
         await self.cache.invalidate('all_menus', f'menu_{target_menu_id}')
+        item = await self.repository.delete(target_menu_id)
         return item
 
     async def all_menus_with_content(self):

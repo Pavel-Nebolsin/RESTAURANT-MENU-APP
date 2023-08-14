@@ -28,18 +28,18 @@ class SubMenuService:
         return item
 
     async def create(self, target_menu_id: uuid.UUID, submenu: SubMenuBase) -> SubMenuSchema:
-        item = await self.repository.create(target_menu_id, submenu)
         await self.cache.invalidate('all_submenus', 'all_menus', f'menu_{target_menu_id}')
+        item = await self.repository.create(target_menu_id, submenu)
         return item
 
     async def update(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID,
                      submenu_data: SubMenuBase) -> SubMenuSchema:
-        item = await self.repository.update(target_menu_id, target_submenu_id, submenu_data)
         await self.cache.invalidate('all_submenus', f'submenu_{target_submenu_id}')
+        item = await self.repository.update(target_menu_id, target_submenu_id, submenu_data)
         return item
 
     async def delete(self, target_menu_id: uuid.UUID, target_submenu_id: uuid.UUID) -> JSONResponse:
-        item = await self.repository.delete(target_menu_id, target_submenu_id)
         await self.cache.invalidate('all_menus', 'all_submenus', f'submenu_{target_submenu_id}',
                                     f'menu_{target_menu_id}')
+        item = await self.repository.delete(target_menu_id, target_submenu_id)
         return item
