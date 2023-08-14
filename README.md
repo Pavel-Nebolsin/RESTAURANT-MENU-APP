@@ -1,9 +1,17 @@
 # Y_LAB_MENU_APP
-Для запуска всех контейнеров в корневой директории в консоли выполнить:<br>
-`docker-compose up -d`<br>
 
+Для запуска приложения с ТЕСТАМИ (пустая база для pytest и postman) корневой директории в консоли выполнить:<br>
+`docker-compose -f docker-compose-test.yml up -d`<br>
 Когда все контейнеры запустятся, можно запустить тесты командой:<br>
 `docker exec crud_tests pytest --color=yes -s -v /app/tests`<br>
+
+Для запуска приложения с Celery[RabbitMQ] (с таской читающей excel и апдейтящей бд) корневой директории в консоли выполнить:<br>
+`docker-compose up -d`<br>
+`Menu.xlsx` находится в папки admin в контейнере с Celery
+
+
+
+
 
 (предварительно должен бы установлен <a href="https://www.docker.com/">Docker<a>)
 
