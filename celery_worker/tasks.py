@@ -99,7 +99,11 @@ def parse_xlsx(url):
             current_submenu_id = row[1]
             submenus.append([current_menu_id, row[1], row[2], row[3]])
         elif is_valid_uuid(row[2]):
-            dishes.append([current_menu_id, current_submenu_id, row[2], row[3], row[4], row[5]])
+            # Реализация задания: **Блюда по акции. Размер скидки (%) указывается в столбце G файла Menu.xlsx
+            discount = row[6]
+            price = row[5]
+            price_with_discount = price - ((price / 100) * discount)
+            dishes.append([current_menu_id, current_submenu_id, row[2], row[3], row[4], price_with_discount])
     result = {'menus': menus, 'submenus': submenus, 'dishes': dishes}
     return result
 
