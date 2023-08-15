@@ -84,8 +84,8 @@ def parse_xlsx(url):
     wb = openpyxl.load_workbook(url)
     sheet = wb.active
 
-    last_menu_id = None
-    last_submenu_id = None
+    current_menu_id = None
+    current_submenu_id = None
 
     menus = []
     submenus = []
@@ -93,13 +93,13 @@ def parse_xlsx(url):
 
     for row in sheet.iter_rows(values_only=True):
         if is_valid_uuid(row[0]):
-            last_menu_id = row[0]
+            current_menu_id = row[0]
             menus.append([row[0], row[1], row[2]])
         elif is_valid_uuid(row[1]):
-            last_submenu_id = row[1]
-            submenus.append([last_menu_id, row[1], row[2], row[3]])
+            current_submenu_id = row[1]
+            submenus.append([current_menu_id, row[1], row[2], row[3]])
         elif is_valid_uuid(row[2]):
-            dishes.append([last_menu_id, last_submenu_id, row[2], row[3], row[4], row[5]])
+            dishes.append([current_menu_id, current_submenu_id, row[2], row[3], row[4], row[5]])
     result = {'menus': menus, 'submenus': submenus, 'dishes': dishes}
     return result
 
