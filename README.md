@@ -1,6 +1,6 @@
 # Y_LAB_MENU_APP
-
-## Тесты
+API для ресторана на основе Fastapi, SQLAlchemy, PostgreSQL, Redis, Celery и Docker, созданный во время обучения на YLab University
+## Запуск и тесты
 Для запуска приложения с тестами (pytest) корневой директории в консоли выполнить:<br>
 `docker-compose up -d`<br>
 Когда все контейнеры (uvicorn server, postgres db, reddis, tests) запустятся, можно запустить тесты командой:<br>
