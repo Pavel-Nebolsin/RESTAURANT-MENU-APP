@@ -7,6 +7,7 @@ API для ресторана на основе Fastapi, SQLAlchemy, PostgreSQL,
 `docker exec crud_tests pytest --color=yes -s -v /app/tests`<br>
 (предварительно должен бы установлен <a href="https://www.docker.com/">Docker<a>)
 <br>
+#### Описание эндпоинтов API можно посмотреть по адресу `http://127.0.0.1:8000/docs`
 ## Celery task
 Для запуска приложения с Celery[RabbitMQ] (с таской читающей excel и апдейтящей бд)<br>
 в корневой директории в консоли выполнить: `docker-compose -f docker-compose-with-celery-task up -d`<br>
