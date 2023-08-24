@@ -1,5 +1,5 @@
-# Y_LAB_MENU_APP
-API для ресторана на основе Fastapi, SQLAlchemy, PostgreSQL, Redis, Celery и Docker, созданный во время обучения в YLab University
+# RESTAURANT MENU APP
+API для ресторана на основе Fastapi, SQLAlchemy, PostgreSQL, Redis, Celery и Docker, созданный как пет проект, для пополнения стека технологий
 ## Запуск и тесты
 Для запуска приложения с тестами (pytest) корневой директории в консоли выполнить:<br>
 `docker-compose up -d`<br>
