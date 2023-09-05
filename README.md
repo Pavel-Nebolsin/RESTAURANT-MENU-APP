@@ -1,5 +1,5 @@
 # RESTAURANT MENU APP
-API для ресторана на основе FastaAPI, SQLAlchemy, PostgreSQL, Redis, Celery и Docker, созданный как пет проект, для пополнения стека технологий
+API для ресторана на основе FastaAPI, SQLAlchemy, PostgreSQL, Redis, Celery и Docker, созданный как пет проект, для пополнения стека технологий.
 ## Запуск и тесты
 Для запуска приложения с тестами (pytest) корневой директории в консоли выполнить:<br>
 `docker-compose up -d`<br>
